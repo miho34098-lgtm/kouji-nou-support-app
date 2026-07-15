@@ -1,0 +1,79 @@
+// Firestore Security Rules — kouji-nou-support-app
+// SRS.md §11「セキュリティ・監査」、SDD.md CC-04（入力バリデーション）に対応。
+// 本人は自分のデータのみアクセス可。介護者はlinkedUserIdで紐付けられた本人データのみアクセス可。
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 介護者が対象本人(targetUserId)に代理アクセス可能かどうか
+    function isLinkedCaregiver(targetUserId) {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.linkedUserId == targetUserId;
+    }
+
+    function canAccess(userId) {
+      return isOwner(userId) || isLinkedCaregiver(userId);
+    }
+
+    match /users/{userId} {
+      allow read: if canAccess(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId); // 介護者はユーザーレコード自体は変更不可（FR-ADM-001はデータ側で代理編集）
+      allow delete: if false; // アカウント削除は将来実装（アプリ内フローを経由する運用とし、直接削除は禁止）
+    }
+
+    match /schedules/{scheduleId} {
+      allow read, create, update: if canAccess(request.resource.data.userId) || canAccess(resource.data.userId);
+      allow delete: if false;
+    }
+
+    match /checklistItems/{itemId} {
+      allow read, create, update: if canAccess(request.resource.data.userId) || canAccess(resource.data.userId);
+      allow delete: if false;
+    }
+
+    match /checklistLogs/{logId} {
+      allow read, create, update: if isSignedIn(); // itemId経由の間接参照のため、アプリ層のバリデーションと併用
+      allow delete: if false;
+    }
+
+    // FR-ADM-002: 代理操作ログ。作成のみ許可し、改ざん防止のため更新・削除は禁止
+    match /proxyLogs/{logId} {
+      allow read: if canAccess(resource.data.targetUserId);
+      allow create: if isSignedIn() && request.resource.data.actorUserId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // FR-USR-002（Round1修正CX-06）: 招待コードは所有者本人のみ発行・失効操作可能。読み取りは認証済みユーザーに限定（コード自体は推測困難な8桁）
+    match /inviteCodes/{code} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(request.resource.data.ownerUserId);
+      allow update: if isOwner(resource.data.ownerUserId);
+      allow delete: if false;
+    }
+
+    // 招待コード試行ログ。総当たり対策のレート制限判定に使用。作成のみ許可（改ざん防止）
+    match /inviteAttempts/{attemptId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    // 【Phase6追加・SDD §3参照】Push購読情報。ドキュメントID=userId。本人のみ読み書き可。
+    // CW-01(GitHub Actions)はfirebase-admin SDK経由でアクセスするためSecurity Rulesの対象外。
+    match /pushSubscriptions/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

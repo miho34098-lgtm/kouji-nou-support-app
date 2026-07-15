@@ -1,0 +1,57 @@
+{
+  "_comment": "SDD ADR-006: 公的ガイドライン準拠の静的データ。全ユーザー共通表示（Round2でパーソナライズ廃止）。AIによる動的生成は行わない。",
+  "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/",
+  "categories": [
+    {
+      "category": "記憶訓練",
+      "menus": [
+        {
+          "menuId": "memory-001",
+          "title": "メモや手帳を使った予定の記録・確認",
+          "description": "毎日決まった時間にメモ・手帳を見返す習慣をつける、代償手段の獲得を目的とした基本的な取り組みです。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/"
+        },
+        {
+          "menuId": "memory-002",
+          "title": "反復練習による記憶の定着（間隔を空けて繰り返す）",
+          "description": "覚えたい情報を時間を空けながら繰り返し確認する方法です。専門家の指導のもとで行うことが推奨されています。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/"
+        }
+      ]
+    },
+    {
+      "category": "注意訓練",
+      "menus": [
+        {
+          "menuId": "attention-001",
+          "title": "一つの作業に集中する時間を少しずつ延ばす",
+          "description": "短時間の作業から始め、休憩を挟みながら集中できる時間を無理なく延ばしていく取り組みです。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/"
+        },
+        {
+          "menuId": "attention-002",
+          "title": "周囲の刺激を減らした環境での作業",
+          "description": "テレビや音を消すなど、気が散る要因を減らした環境で作業を行う環境調整の取り組みです。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/"
+        }
+      ]
+    },
+    {
+      "category": "遂行機能訓練",
+      "menus": [
+        {
+          "menuId": "executive-001",
+          "title": "作業の手順を紙に書き出してから始める",
+          "description": "やることを順番に書き出し、一つずつ確認しながら進める取り組みです。実生活の目標設定に即した内容が推奨されています。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/rehab/training/"
+        },
+        {
+          "menuId": "executive-002",
+          "title": "金銭管理など生活場面での段階的な練習",
+          "description": "実際の生活場面（買い物・金銭管理等）を題材に、専門家と一緒に段階的に取り組む方法です。",
+          "sourceUrl": "https://www.rehab.go.jp/brain_fukyu/how04/life/"
+        }
+      ]
+    }
+  ]
+}
