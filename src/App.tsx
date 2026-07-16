@@ -25,7 +25,7 @@ function AppShell() {
   // FR-SYS-002: 未インストール状態での初回起動時にオンボーディング画面を表示
   if (showOnboarding) {
     return (
-      <main style={{ fontSize: 18, padding: 16 }}>
+      <main className="app-container" style={{ fontSize: 18, padding: 16 }}>
         <h1>ホーム画面に追加してください</h1>
         <p>通知機能を使うには、このアプリをホーム画面に追加する必要があります。</p>
       </main>
@@ -34,11 +34,15 @@ function AppShell() {
 
   // FR-USR-001: ロール未選択の場合はアカウント作成画面へ
   if (!currentUser) {
-    return <RoleSelect />;
+    return (
+      <div className="app-container">
+        <RoleSelect />
+      </div>
+    );
   }
 
   return (
-    <main style={{ fontSize: 18, padding: 16 }}>
+    <main className="app-container" style={{ fontSize: 18, padding: 16 }}>
       <nav style={{ marginBottom: 16 }}>
         <button onClick={() => setView("home")} style={{ minHeight: 44, fontSize: 18, marginRight: 8 }}>
           ホーム

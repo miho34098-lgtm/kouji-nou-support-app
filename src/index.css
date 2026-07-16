@@ -1,0 +1,23 @@
+/* PC/タブレット幅でも読みやすいよう、コンテンツ幅を制限し中央寄せする（NFR-USE準拠のスマホ向けタップ領域・文字サイズは各コンポーネントのインラインスタイルのまま維持） */
+html,
+body {
+  margin: 0;
+  background: #f4f6f6;
+}
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+@media (min-width: 600px) {
+  .app-container {
+    min-height: auto;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+}
